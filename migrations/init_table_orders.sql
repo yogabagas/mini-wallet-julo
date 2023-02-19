@@ -1,0 +1,21 @@
+CREATE TABLE `orders` (
+    `order_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `customer_id` bigint unsigned NOT NULL,
+    `employee_id` bigint unsigned NOT NULL,
+    `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `purchase_order_number` varchar(30) NOT NULL,
+    `ship_date` datetime NOT NULL,
+    `shipping_method_id` bigint unsigned NOT NULL,
+    `freight_charge` decimal(10, 2) NOT NULL,
+    `taxes` decimal(10, 2) NOT NULL,
+    `payment_received` char(1) NOT NULL DEFAULT 0,
+    `comment` varchar(50),
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_by` bigint NOT NULL DEFAULT 0,
+    `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_by` bigint NOT NULL DEFAULT 0,
+    PRIMARY KEY (`order_id`),
+    CONSTRAINT orders_customer_id_FK FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    CONSTRAINT orders_shipping_method_id_FK FOREIGN KEY (shipping_method_id) REFERENCES shipping_methods (shipping_method_id),
+    CONSTRAINT orders_employee_id_FK FOREIGN KEY (employee_id) REFERENCES employees (employee_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

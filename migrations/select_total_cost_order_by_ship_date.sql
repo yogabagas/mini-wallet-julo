@@ -1,0 +1,2 @@
+SELECT order_id, customer_id, employee_id, order_date, purchase_order_number, ship_date, shipping_method_id, freight_charge, taxes,
+SUM(freight_charge+taxes) AS total_cost, payment_received, comment FROM orders GROUP BY order_id ORDER BY ship_date DESC;

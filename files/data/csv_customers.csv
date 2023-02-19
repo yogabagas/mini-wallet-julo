@@ -1,0 +1,2 @@
+company_name,first_name,last_name,billing_address,city,province,zip_code,email,company_website,phone_number,ship_address,ship_city,ship_province,ship_zip_code,ship_phone_number,fax_number
+"Contoso, Ltd",John,Doe,Mampang Prapatan,South Jakarta,DKI Jakarta,12201,john.doe@email.com,www.contoso.id,+6221911102,Mampang Prapatan,South Jakarta,DKI Jakarta,12201,+6221911102,111223
