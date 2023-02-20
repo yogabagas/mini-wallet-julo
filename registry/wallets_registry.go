@@ -1,15 +1,10 @@
 package registry
 
 import (
-	"github.com/yogabagas/jatis-BE/adapter/controller"
-	"github.com/yogabagas/jatis-BE/domain/repository"
-	"github.com/yogabagas/jatis-BE/service/wallets/presenter"
-	wallets "github.com/yogabagas/jatis-BE/service/wallets/usecase"
+	"github.com/yogabagas/mini-wallet-julo/adapter/controller"
+	"github.com/yogabagas/mini-wallet-julo/service/wallets/presenter"
+	wallets "github.com/yogabagas/mini-wallet-julo/service/wallets/usecase"
 )
-
-func (m *module) NewRepositoryRegistry() repository.RepositoryRegistry {
-	return repository.NewRepositoryRegistry(m.sql)
-}
 
 func (m *module) NewWalletsPresenter() presenter.WalletsPresenter {
 	return presenter.NewWalletsPresenter()

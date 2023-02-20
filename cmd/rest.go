@@ -3,7 +3,7 @@ package cmd
 import (
 	"time"
 
-	rest "github.com/yogabagas/jatis-BE/transport/rest"
+	rest "github.com/yogabagas/mini-wallet-julo/transport/rest"
 
 	"github.com/spf13/cobra"
 )

@@ -14,6 +14,9 @@ type RepositoryRegistryImpl struct {
 
 type RepositoryRegistry interface {
 	GetWalletsRepository() WalletsRepository
+	GetWalletBalanceHistoriesRepository() WalletBalanceHistoriesRepository
+
+	DoInTransaction(ctx context.Context, txFunc InTransaction) (out interface{}, err error)
 }
 
 func NewRepositoryRegistry(db *sql.DB) RepositoryRegistry {
@@ -25,6 +28,13 @@ func (r RepositoryRegistryImpl) GetWalletsRepository() WalletsRepository {
 		return NewWalletsRepository(r.dbExecutor)
 	}
 	return NewWalletsRepository(r.db)
+}
+
+func (r RepositoryRegistryImpl) GetWalletBalanceHistoriesRepository() WalletBalanceHistoriesRepository {
+	if r.dbExecutor != nil {
+		return NewWalletBalanceHistoriesRepository(r.dbExecutor)
+	}
+	return NewWalletBalanceHistoriesRepository(r.db)
 }
 
 func (r RepositoryRegistryImpl) DoInTransaction(ctx context.Context, txFunc InTransaction) (out interface{}, err error) {

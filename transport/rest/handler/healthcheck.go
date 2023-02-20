@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/yogabagas/jatis-BE/domain/service"
+	"github.com/yogabagas/mini-wallet-julo/domain/service"
 )
 
 func (h *HandlerImpl) HealthCheck(w http.ResponseWriter, r *http.Request) {

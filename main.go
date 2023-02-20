@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/yogabagas/jatis-BE/cmd"
-)
+import "github.com/yogabagas/mini-wallet-julo/cmd"
 
 func main() {
 	cmd.Run()

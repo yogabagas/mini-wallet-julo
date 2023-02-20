@@ -16,30 +16,33 @@ type EnableWalletRequest struct {
 	Token string `json:"token"`
 }
 
-type (
-	EnableWalletResponse struct {
-		Wallet struct {
-			ID        string    `json:"id"`
-			OwnedBy   string    `json:"owned_by"`
-			Status    string    `json:"enabled"`
-			EnabledAt time.Time `json:"enabled_at"`
-			Balance   int       `json:"balance"`
-		} `json:"wallet"`
-	}
-)
+type Wallet struct {
+	ID         string     `json:"id"`
+	OwnedBy    string     `json:"owned_by"`
+	Status     string     `json:"enabled"`
+	EnabledAt  *time.Time `json:"enabled_at,omitempty"`
+	DisabledAt *time.Time `json:"disabled_at,omitempty"`
+	Balance    int        `json:"balance"`
+}
 
-type GetWalletBalanceRequest struct {
+type EnableWalletResponse struct {
+	Wallet Wallet `json:"wallet"`
+}
+
+type ViewWalletBalanceRequest struct {
 	Token string `json:"token"`
 }
 
-type (
-	GetWalletBalanceRequestResponse struct {
-		Wallet struct {
-			ID        string    `json:"id"`
-			OwnedBy   string    `json:"owned_by"`
-			Status    string    `json:"enabled"`
-			EnabledAt time.Time `json:"enabled_at"`
-			Balance   int       `json:"balance"`
-		} `json:"wallet"`
-	}
-)
+type ViewWalletBalanceResponse struct {
+	Wallet *Wallet `json:"wallet,omitempty"`
+	Error  string  `json:"error,omitempty"`
+}
+
+type DisableWalletRequest struct {
+	Token      string `json:"token"`
+	IsDisabled bool   `json:"is_disabled"`
+}
+
+type DisableWalletResponse struct {
+	Wallet Wallet `json:"wallet"`
+}

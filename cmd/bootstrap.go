@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	db "github.com/yogabagas/jatis-BE/pkg/database/sql"
+	db "github.com/yogabagas/mini-wallet-julo/pkg/database/sql"
 
 	"github.com/joho/godotenv"
 )
@@ -51,7 +51,7 @@ func InitDBConn() *db.MySQL {
 		host = "localhost"
 	}
 	if schema == "" {
-		schema = "jatisdb"
+		schema = "wallet_db"
 	}
 
 	mySQL, err := db.Connect(user, password, fmt.Sprintf("%s:3306", host), schema)

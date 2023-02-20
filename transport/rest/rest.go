@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/yogabagas/jatis-BE/registry"
-	groupV1 "github.com/yogabagas/jatis-BE/transport/rest/group/v1"
-	"github.com/yogabagas/jatis-BE/transport/rest/handler"
+	"github.com/yogabagas/mini-wallet-julo/registry"
+	groupV1 "github.com/yogabagas/mini-wallet-julo/transport/rest/group/v1"
+	"github.com/yogabagas/mini-wallet-julo/transport/rest/handler"
 )
 
 type Options struct {
@@ -30,23 +30,22 @@ func NewRest(o *Options) *Handler {
 		registry.NewSQLConn(o.Db),
 	)
 	appController := reg.NewAppController()
+	middleware := reg.NewMiddleware()
 
 	handlerImpl := handler.HandlerImpl{
 		Controller: appController,
+		Middleware: middleware,
 	}
 
 	r := mux.NewRouter()
 
 	r.Path("/health").HandlerFunc(handlerImpl.HealthCheck)
 
-	v1 := r.PathPrefix("/v1").Subrouter()
+	apiPath := r.PathPrefix("/api")
 
-	groupV1.NewCustomersGroupV1(v1, handlerImpl)
-	groupV1.NewOrderDetailsGroupV1(v1, handlerImpl)
-	groupV1.NewEmployeesGroupV1(v1, handlerImpl)
-	groupV1.NewProductsGroupV1(v1, handlerImpl)
-	groupV1.NewShippingMethodsGroupV1(v1, handlerImpl)
-	groupV1.NewOrdersGroupV1(v1, handlerImpl)
+	v1 := apiPath.PathPrefix("/v1").Subrouter()
+
+	groupV1.NewWalletsGroupV1(v1, handlerImpl, middleware)
 
 	o.Mux = r
 

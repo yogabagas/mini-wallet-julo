@@ -3,7 +3,9 @@ package registry
 import (
 	"database/sql"
 
-	"github.com/yogabagas/jatis-BE/adapter/controller"
+	"github.com/yogabagas/mini-wallet-julo/adapter/controller"
+	"github.com/yogabagas/mini-wallet-julo/domain/repository"
+	"github.com/yogabagas/mini-wallet-julo/transport/rest/middleware"
 )
 
 type module struct {
@@ -12,6 +14,7 @@ type module struct {
 
 type Controller interface {
 	NewAppController() controller.AppController
+	NewMiddleware() middleware.Middleware
 }
 
 type Option func(*module)
@@ -26,14 +29,17 @@ func NewRegistry(options ...Option) Controller {
 
 func (m *module) NewAppController() controller.AppController {
 	return controller.AppController{
-		CustomersController:       m.NewCustomersController(),
-		OrderDetailsController:    m.NewOrderDetailsController(),
-		EmployeesController:       m.NewEmployeesController(),
-		ProductsController:        m.NewProductsController(),
-		ShippingMethodsController: m.NewShippingMethodsController(),
-		OrdersController:          m.NewOrdersController(),
-		WalletsController:         m.NewWalletsController(),
+		WalletsController:                m.NewWalletsController(),
+		WalletBalanceHistoriesController: m.NewWalletBalanceHistoriesController(),
 	}
+}
+
+func (m *module) NewMiddleware() middleware.Middleware {
+	return middleware.NewMiddleware()
+}
+
+func (m *module) NewRepositoryRegistry() repository.RepositoryRegistry {
+	return repository.NewRepositoryRegistry(m.sql)
 }
 
 func NewSQLConn(mdb *sql.DB) Option {

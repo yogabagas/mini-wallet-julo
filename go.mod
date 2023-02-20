@@ -1,8 +1,10 @@
-module github.com/yogabagas/jatis-BE
+module github.com/yogabagas/mini-wallet-julo
 
 go 1.19
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/gocarina/gocsv v0.0.0-20230123225133-763e25b40669
 	github.com/gorilla/mux v1.8.0
@@ -14,6 +16,7 @@ require (
 )
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.opentelemetry.io/otel v1.13.0 // indirect

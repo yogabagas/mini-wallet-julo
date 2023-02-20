@@ -9,5 +9,5 @@ CREATE TABLE wallet_balance_histories (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_by` CHAR(36) NOT NULL,
   PRIMARY KEY (wallet_id, reference_id),
-  CONSTRAINT fk_wallet_id FOREIGN KEY (wallet_id) REFERENCES wallets (id) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT fk_wallet_id FOREIGN KEY (wallet_id) REFERENCES wallets (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

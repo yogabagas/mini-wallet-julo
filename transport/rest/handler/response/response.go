@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"github.com/yogabagas/jatis-BE/pkg/log"
+
+	"github.com/yogabagas/mini-wallet-julo/pkg/log"
+	"github.com/yogabagas/mini-wallet-julo/shared/constant"
 )
 
 var (
@@ -18,10 +20,12 @@ var (
 	ErrTimeoutError        = errors.New("Timeout error")
 	ErrUnauthorized        = errors.New("Unauthorized")
 	ErrConflict            = errors.New("Conflict")
+	ErrMethodNotAllowed    = errors.New("Method not allowed")
 )
 
 const (
 	StatusCodeGenericSuccess            = "200000"
+	StatusCodeAccepted                  = "202000"
 	StatusCodeBadRequest                = "400000"
 	StatusCodeAlreadyRegistered         = "400001"
 	StatusCodeUnauthorized              = "401000"
@@ -36,6 +40,7 @@ const (
 	StatusCodeFailedOTP                 = "503000"
 	StatusCodeServiceUnavailable        = "503000"
 	StatusCodeTimeoutError              = "504000"
+	StatusCodeMethodNotAllowed          = "405000"
 )
 
 func GetErrorCode(err error) string {
@@ -60,10 +65,27 @@ func GetErrorCode(err error) string {
 		return StatusCodeInternalError
 	case ErrTimeoutError:
 		return StatusCodeTimeoutError
+	case ErrMethodNotAllowed:
+		return StatusCodeMethodNotAllowed
 	case nil:
 		return StatusCodeGenericSuccess
 	default:
 		return StatusCodeInternalError
+	}
+}
+
+func GetHTTPStatus(code int) string {
+	switch code {
+	case http.StatusOK:
+		return "success"
+	case http.StatusBadRequest:
+		return "bad request"
+	case http.StatusInternalServerError:
+		return "internal server error"
+	case http.StatusUnauthorized:
+		return "unauthorized"
+	default:
+		return "undefined"
 	}
 }
 
@@ -77,22 +99,38 @@ type JSONResponse struct {
 	Data        interface{}            `json:"data,omitempty"`
 	Message     string                 `json:"message,omitempty"`
 	Code        string                 `json:"code"`
-	StatusCode  int                    `json:"statusCode"`
+	StatusCode  int                    `json:"status_code"`
+	Status      string                 `json:"status"`
 	ErrorString string                 `json:"error,omitempty"`
 	Error       error                  `json:"-"`
 	RealError   string                 `json:"-"`
-	Latency     string                 `json:"latency"`
+	Latency     string                 `json:"latency,omitempty"`
 	Log         map[string]interface{} `json:"-"`
 	HTMLPage    bool                   `json:"-"`
 	Result      interface{}            `json:"result,omitempty"`
 }
 
 func NewJSONResponse() *JSONResponse {
-	return &JSONResponse{Code: StatusCodeGenericSuccess, StatusCode: GetHTTPCode(StatusCodeGenericSuccess), Log: map[string]interface{}{}}
+	return &JSONResponse{Code: StatusCodeGenericSuccess, StatusCode: GetHTTPCode(StatusCodeGenericSuccess), Status: GetHTTPStatus(http.StatusOK), Log: map[string]interface{}{}}
 }
 
 func (r *JSONResponse) SetData(data interface{}) *JSONResponse {
 	r.Data = data
+	return r
+}
+
+func (r *JSONResponse) SetStatus(status string) *JSONResponse {
+	r.Status = status
+	return r
+}
+
+func (r *JSONResponse) SetCode(code string) *JSONResponse {
+	r.Code = code
+	return r
+}
+
+func (r *JSONResponse) SetStatusCode(statusCode int) *JSONResponse {
+	r.StatusCode = statusCode
 	return r
 }
 
@@ -116,16 +154,16 @@ func (r *JSONResponse) SetLatency(latency float64) *JSONResponse {
 	return r
 }
 
-func (r *JSONResponse) SetLog(key string, val interface{}) *JSONResponse {
-	_, file, no, _ := runtime.Caller(1)
-	log.(log.Fields{
-		"code":            r.Code,
-		"err":             val,
-		"function_caller": fmt.Sprintf("file %v line no %v", file, no),
-	}).Errorln("Error API")
-	r.Log[key] = val
-	return r
-}
+// func (r *JSONResponse) SetLog(key string, val interface{}) *JSONResponse {
+// 	_, file, no, _ := runtime.Caller(1)
+// 	log.Errorln(log.Fields{
+// 		"code":            r.Code,
+// 		"err":             val,
+// 		"function_caller": fmt.Sprintf("file %v line no %v", file, no),
+// 	}).Errorln("Error API")
+// 	r.Log[key] = val
+// 	return r
+// }
 
 func getErrType(err error) error {
 	switch err.(type) {
@@ -146,6 +184,7 @@ func (r *JSONResponse) SetError(err error, a ...string) *JSONResponse {
 	r.Error = err
 	r.ErrorString = err.Error()
 	r.StatusCode = GetHTTPCode(r.Code)
+	r.Status = GetHTTPStatus(r.StatusCode)
 
 	if r.StatusCode == http.StatusInternalServerError {
 		r.ErrorString = "Internal Server error"
