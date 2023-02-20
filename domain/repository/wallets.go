@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	insertWallet = `INSERT INTO wallets (id, owned_by, token, status, balance, enabled_at, created_by, updated_by)
-	VALUES(?,?,?,?,?,?,?,?,?,?)`
+	insertWallet = `INSERT INTO wallets (id, owned_by, token, status, balance, created_by, updated_by)
+	VALUES(?,?,?,?,?,?,?)`
 
 	updateWalletByToken = `UPDATE wallets SET status = ?, enabled_at = ?, updated_by = ? WHERE token = ?`
 

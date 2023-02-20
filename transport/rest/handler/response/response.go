@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/yogabagas/mini-wallet-julo/pkg/log"
+	// "github.com/yogabagas/mini-wallet-julo/pkg/log"
 	"github.com/yogabagas/mini-wallet-julo/shared/constant"
 )
 
@@ -209,9 +210,7 @@ func (r *JSONResponse) Send(w http.ResponseWriter) {
 		w.WriteHeader(r.StatusCode)
 		err := json.NewEncoder(w).Encode(r)
 		if err != nil {
-			log.WithFields(log.Fields{
-				"err": err.Error(),
-			}).Errorln("[JSONResponse] Error encoding response")
+			log.Println("err", err.Error())
 		}
 	}
 }
